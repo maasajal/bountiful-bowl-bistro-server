@@ -29,8 +29,9 @@ const run = async () => {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
+    const userCollection = client.db("bbbDb").collection("users");
     const menuCollection = client.db("bbbDb").collection("menu");
-    const reviewsCollection = client.db("bbbDb").collection("reviews");
+    const reviewCollection = client.db("bbbDb").collection("reviews");
     const cartCollection = client.db("bbbDb").collection("carts");
 
     app.get("/menu", async (req, res) => {
@@ -38,7 +39,7 @@ const run = async () => {
       res.send(result);
     });
     app.get("/reviews", async (req, res) => {
-      const result = await reviewsCollection.find().toArray();
+      const result = await reviewCollection.find().toArray();
       res.send(result);
     });
 
@@ -48,6 +49,13 @@ const run = async () => {
       const result = await cartCollection.find(query).toArray();
       res.send(result);
     });
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+
     app.post("/carts", async (req, res) => {
       const cartItem = req.body;
       const result = await cartCollection.insertOne(cartItem);
